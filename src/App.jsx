@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import AdminDashboard from './components/admin/AdminDashboard';
 import { AppStateProvider, useAppState } from './context/AppStateContext';
 import Header from './components/Header';
 import BookingPanel from './components/BookingPanel';
@@ -99,7 +101,10 @@ function MainLayout() {
 export default function App() {
   return (
     <AppStateProvider>
-      <MainLayout />
+      <Routes>
+        <Route path="/*" element={<MainLayout />} />
+        <Route path="/admin/*" element={<AdminDashboard />} />
+      </Routes>
     </AppStateProvider>
   );
 }
