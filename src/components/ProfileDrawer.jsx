@@ -63,7 +63,7 @@ export default function ProfileDrawer({ isOpen, onClose }) {
   const handleHelpClick = (e) => {
     e.preventDefault();
     onClose();
-    openChat();
+    openChat("AGENT");
   };
 
   return (

@@ -327,14 +327,25 @@ export const AppStateProvider = ({ children }) => {
   const closeNotifications = () => setIsNotificationsOpen(false);
 
   // Chat message logics
-  const openChat = () => {
+  const openChat = (mode = "AI") => {
+    setChatMode(mode);
     setIsChatOpen(true);
-    if (chatMessages.length === 0) {
+    if (chatMessages.length === 0 || mode === "AGENT") {
       const isAR = language === "AR";
-      const greet = isAR 
-        ? "مرحباً! أنا مساعد AVEC الذكي. كيف يمكنني مساعدتك في طلب رحلة اليوم؟"
-        : "Hello! I am AVEC's AI Assistant. How can I help you request a ride today?";
-      setChatMessages([{ sender: "bot", text: greet, id: 1 }]);
+      const baseId = Date.now();
+      
+      let initialMsg = { sender: "bot", text: "", id: baseId };
+      if (mode === "AGENT") {
+        initialMsg.text = isAR 
+          ? "مرحباً! أنا سارة من دعم AVEC. كيف يمكنني مساعدتك اليوم؟" 
+          : "Hi there! I'm Sarah from AVEC Support. How can I assist you today?";
+      } else {
+        initialMsg.text = isAR 
+          ? "مرحباً! أنا مساعد AVEC الذكي. كيف يمكنني مساعدتك في طلب رحلة اليوم؟"
+          : "Hello! I am AVEC's AI Assistant. How can I help you request a ride today?";
+      }
+      
+      setChatMessages([initialMsg]);
     }
   };
 

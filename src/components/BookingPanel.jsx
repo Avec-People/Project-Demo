@@ -25,6 +25,7 @@ export default function BookingPanel({ isOpen, onClose, initialTab = 'ride' }) {
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [shoppingList, setShoppingList] = useState("");
   const [womenOnly, setWomenOnly] = useState(false);
+  const [petFriendly, setPetFriendly] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -723,28 +724,45 @@ export default function BookingPanel({ isOpen, onClose, initialTab = 'ride' }) {
                   : dict.txtSelectVehicle
               }
             </h3>
-            {userProfile?.gender === 'female' && activeTab === 'ride' && (
-              <label className="m3-switch" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--md-sys-color-primary)' }}>
-                  {language === 'AR' ? 'سائقة فقط' : 'Women Only'}
-                </span>
-                <input 
-                  type="checkbox" 
-                  checked={womenOnly}
-                  onChange={(e) => setWomenOnly(e.target.checked)}
-                />
-                <span className="switch-slider"></span>
-              </label>
-            )}
+            <div style={{ display: 'flex', gap: '12px' }}>
+              {activeTab === 'ride' && (
+                <label className="m3-switch" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '14px', color: 'var(--md-sys-color-primary)' }}>pets</span>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--md-sys-color-primary)' }}>
+                    {language === 'AR' ? 'حيوانات أليفة' : 'Pet Friendly'}
+                  </span>
+                  <input 
+                    type="checkbox" 
+                    checked={petFriendly}
+                    onChange={(e) => setPetFriendly(e.target.checked)}
+                  />
+                  <span className="switch-slider"></span>
+                </label>
+              )}
+              {userProfile?.gender === 'female' && activeTab === 'ride' && (
+                <label className="m3-switch" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '14px', color: 'var(--md-sys-color-primary)' }}>female</span>
+                  <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--md-sys-color-primary)' }}>
+                    {language === 'AR' ? 'سائقة فقط' : 'Women Only'}
+                  </span>
+                  <input 
+                    type="checkbox" 
+                    checked={womenOnly}
+                    onChange={(e) => setWomenOnly(e.target.checked)}
+                  />
+                  <span className="switch-slider"></span>
+                </label>
+              )}
+            </div>
           </div>
           
-          {womenOnly && activeTab === 'ride' && (
+          {(womenOnly || petFriendly) && activeTab === 'ride' && (
             <div className="m3-banner" style={{ marginTop: '8px', backgroundColor: 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-on-primary-container)' }}>
-              <span className="material-symbols-outlined">female</span>
+              <span className="material-symbols-outlined">{womenOnly && petFriendly ? 'health_and_safety' : womenOnly ? 'female' : 'pets'}</span>
               <span style={{ fontSize: '12px' }}>
                 {language === 'AR' 
-                  ? 'تم تفعيل وضع السيدات. سيتم توجيه طلبك لسائقات فقط.' 
-                  : 'Women-only mode active. Your request will only match with female drivers.'}
+                  ? 'تم تفعيل فلاتر البحث الخاصة بك. سيتم تطبيق الشروط على السائقين.' 
+                  : `Special request active: ${[womenOnly ? 'Women Drivers Only' : '', petFriendly ? 'Pet Friendly Vehicle' : ''].filter(Boolean).join(' + ')}`}
               </span>
             </div>
           )}
